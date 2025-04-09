@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block title %}إدارة الشهادات - متجر التطبيقات{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-md">
+    <div class="flex items-center mb-6">
+        <a href="{{ url_for('admin_dashboard') }}" class="text-blue-600 hover:text-blue-800 ml-2">
+            <i class="fas fa-arrow-right"></i>
+        </a>
+        <h1 class="text-2xl font-bold text-gray-800">إدارة شهادات التوقيع</h1>
+    </div>
+    
+    <div class="mb-8">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">رفع شهادة جديدة</h2>
+        
+        <form method="post" action="{{ url_for('manage_certificates') }}" enctype="multipart/form-data">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label for="user_id" class="block text-gray-700 text-sm font-bold mb-2">المستخدم</label>
+                    <select id="user_id" name="user_id" required
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">اختر المستخدم</option>
+                        {% for user in users %}
+                        <option value="{{ user.id }}">{{ user.username }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="p12_password" class="block text-gray-700 text-sm font-bold mb-2">كلمة مرور شهادة P12</label>
+                    <input type="password" id="p12_password" name="p12_password" required
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <label for="p12_file" class="block text-gray-700 text-sm font-bold mb-2">ملف الشهادة (P12)</label>
+                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                    <div class="space-y-1 text-center">
+                        <i class="fas fa-certificate text-gray-400 text-3xl mb-2"></i>
+                        <div class="flex text-sm text-gray-600">
+                            <label for="p12_file" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500">
+                                <span>اختر ملف</span>
+                                <input id="p12_file" name="p12_file" type="file" accept=".p12" class="sr-only" required>
+                            </label>
+                            <p class="pr-1">أو اسحب وأفلت هنا</p>
+                        </div>
+                        <p class="text-xs text-gray-500">
+                            ملف شهادة P12 للتوقيع
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <label for="mobileprovision_file" class="block text-gray-700 text-sm font-bold mb-2">ملف Mobileprovision</label>
+                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                    <div class="space-y-1 text-center">
+                        <i class="fas fa-file-alt text-gray-400 text-3xl mb-2"></i>
+                        <div class="flex text-sm text-gray-600">
+                            <label for="mobileprovision_file" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500">
+                                <span>اختر ملف</span>
+                                <input id="mobileprovision_file" name="mobileprovision_file" type="file" accept=".mobileprovision" class="sr-only" required>
+                            </label>
+                            <p class="pr-1">أو اسحب وأفلت هنا</p>
+                        </div>
+                        <p class="text-xs text-gray-500">
+                            ملف Mobileprovision للتوقيع
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-end">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
+                    رفع الشهادة
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="border-t border-gray-200 pt-6">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">الشهادات المرفوعة</h2>
+        
+        {% if certificates %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="py-3 px-4 text-right">المستخدم</th>
+                        <th class="py-3 px-4 text-right">ملف P12</th>
+                        <th class="py-3 px-4 text-right">ملف Mobileprovision</th>
+                        <th class="py-3 px-4 text-right">تاريخ الإضافة</th>
+                        <th class="py-3 px-4 text-right">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for cert in certificates %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="py-3 px-4">{{ cert.username }}</td>
+                        <td class="py-3 px-4 text-sm">
+                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
+                                <i class="fas fa-check ml-1"></i> تم الرفع
+                            </span>
+                        </td>
+                        <td class="py-3 px-4 text-sm">
+                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">
+                                <i class="fas fa-check ml-1"></i> تم الرفع
+                            </span>
+                        </td>
+                        <td class="py-3 px-4 text-sm text-gray-600">{{ cert.created_at }}</td>
+                        <td class="py-3 px-4">
+                            <button class="text-red-600 hover:text-red-800">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-8 border border-gray-200 rounded-lg">
+            <i class="fas fa-certificate text-4xl text-gray-300 mb-3"></i>
+            <p class="text-gray-500">لا توجد شهادات مرفوعة بعد</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

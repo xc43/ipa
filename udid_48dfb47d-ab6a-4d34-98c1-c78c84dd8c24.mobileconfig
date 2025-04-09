@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        <dict>
+            <key>PayloadDescription</key>
+            <string>Configures device UDID registration</string>
+            <key>PayloadDisplayName</key>
+            <string>UDID Registration</string>
+            <key>PayloadIdentifier</key>
+            <string>com.appstore.profile.udid</string>
+            <key>PayloadType</key>
+            <string>Profile Service</string>
+            <key>PayloadUUID</key>
+            <string>48dfb47d-ab6a-4d34-98c1-c78c84dd8c24</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadOrganization</key>
+            <string>App Store Distribution</string>
+        </dict>
+    </array>
+    <key>PayloadDescription</key>
+    <string>This profile helps collect your device UDID for app installation</string>
+    <key>PayloadDisplayName</key>
+    <string>UDID Registration Profile</string>
+    <key>PayloadIdentifier</key>
+    <string>com.appstore.config.udid.48dfb47d-ab6a-4d34-98c1-c78c84dd8c24</string>
+    <key>PayloadRemovalDisallowed</key>
+    <false/>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadUUID</key>
+    <string>13035e89-2c43-4924-866f-fd5a97b7b930</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+</dict>
+</plist>

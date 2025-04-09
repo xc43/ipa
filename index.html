@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}متجر التطبيقات - الصفحة الرئيسية{% endblock %}
+
+{% block content %}
+<div class="text-center mb-12">
+    <h1 class="text-4xl font-bold text-gray-800 mb-4">مرحباً بك في متجر التطبيقات</h1>
+    <p class="text-xl text-gray-600">منصة توزيع تطبيقات iOS مع دعم تسجيل UDID</p>
+    
+    {% if not has_device %}
+    <div class="mt-8 bg-blue-50 p-6 rounded-lg shadow-md max-w-2xl mx-auto">
+        <h2 class="text-2xl font-bold text-blue-800 mb-2">تسجيل جهازك</h2>
+        <p class="text-gray-700 mb-4">لتتمكن من تحميل التطبيقات، يجب عليك أولاً تسجيل جهاز iOS الخاص بك للحصول على UDID.</p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <a href="{{ url_for('register_device') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 flex items-center justify-center">
+                <i class="fas fa-mobile-alt ml-2"></i>
+                تسجيل جهازي
+            </a>
+        </div>
+        <div class="mt-4 text-sm text-gray-600">
+            <p>1. اضغط على "تسجيل جهازي" لتنزيل ملف التعريف</p>
+            <p>2. افتح الملف على جهازك وقم بتثبيته</p>
+            <p>3. سيتم تسجيل UDID الخاص بك تلقائياً</p>
+        </div>
+    </div>
+    {% else %}
+    <div class="mt-8 bg-green-50 p-6 rounded-lg shadow-md max-w-2xl mx-auto">
+        <h2 class="text-2xl font-bold text-green-800 mb-2">تم تسجيل جهازك بنجاح!</h2>
+        <p class="text-gray-700">يمكنك الآن تصفح وتحميل التطبيقات المتاحة لجهازك.</p>
+    </div>
+    {% endif %}
+</div>
+
+<div class="mt-12">
+    <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">التطبيقات المتاحة</h2>
+    
+    {% if apps %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {% for app in apps %}
+        <div class="app-card bg-white rounded-xl shadow-md overflow-hidden">
+            <div class="p-4">
+                <div class="flex items-center mb-4">
+                    {% if app.icon_path %}
+                    <img src="{{ url_for('static', filename=app.icon_path) }}" alt="{{ app.name }}" class="w-16 h-16 rounded-xl ml-3">
+                    {% else %}
+                    <div class="w-16 h-16 bg-gray-200 rounded-xl flex items-center justify-center ml-3">
+                        <i class="fas fa-mobile-alt text-gray-400 text-2xl"></i>
+                    </div>
+                    {% endif %}
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800">{{ app.name }}</h3>
+                        <p class="text-sm text-gray-600">الإصدار {{ app.version }}</p>
+                    </div>
+                </div>
+                
+                <p class="text-gray-700 text-sm mb-4">{{ app.description|truncate(100) }}</p>
+                
+                <div class="flex justify-between items-center">
+                    {% if app.signed_app_id %}
+                    <a href="{{ url_for('download_app', signed_app_id=app.signed_app_id) }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-all duration-200">
+                        <i class="fas fa-download ml-1"></i> تحميل
+                    </a>
+                    {% else %}
+                    <button class="bg-gray-300 text-gray-600 font-bold py-2 px-4 rounded-lg cursor-not-allowed">
+                        <i class="fas fa-clock ml-1"></i> قيد التوقيع
+                    </button>
+                    {% endif %}
+                    <span class="text-sm text-gray-600">{{ app.bundle_id }}</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-12">
+        {% if has_device %}
+        <div class="text-gray-600">
+            <i class="fas fa-box-open text-5xl mb-4 text-gray-400"></i>
+            <p class="text-xl">لا توجد تطبيقات متاحة لجهازك حالياً</p>
+            <p class="text-sm mt-2">يرجى التواصل مع المسؤول لإضافة تطبيقات لجهازك</p>
+        </div>
+        {% else %}
+        <div class="text-gray-600">
+            <i class="fas fa-mobile-alt text-5xl mb-4 text-gray-400"></i>
+            <p class="text-xl">قم بتسجيل جهازك أولاً لعرض التطبيقات المتاحة</p>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

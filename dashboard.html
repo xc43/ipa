@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block title %}لوحة التحكم - متجر التطبيقات{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-xl shadow-md p-6 mb-8">
+    <h1 class="text-3xl font-bold text-gray-800 mb-4">لوحة تحكم المسؤول</h1>
+    <p class="text-gray-600">مرحباً بك في لوحة التحكم، يمكنك إدارة التطبيقات والأجهزة والشهادات من هنا.</p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+        <a href="{{ url_for('upload_app') }}" class="bg-blue-50 hover:bg-blue-100 p-4 rounded-lg border border-blue-200 flex items-center">
+            <div class="bg-blue-500 text-white p-3 rounded-lg ml-4">
+                <i class="fas fa-upload"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-blue-800">رفع تطبيق جديد</h3>
+                <p class="text-sm text-gray-600">إضافة تطبيق IPA جديد للمنصة</p>
+            </div>
+        </a>
+        
+        <a href="{{ url_for('manage_certificates') }}" class="bg-green-50 hover:bg-green-100 p-4 rounded-lg border border-green-200 flex items-center">
+            <div class="bg-green-500 text-white p-3 rounded-lg ml-4">
+                <i class="fas fa-certificate"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-green-800">إدارة الشهادات</h3>
+                <p class="text-sm text-gray-600">إدارة شهادات التوقيع والتوزيع</p>
+            </div>
+        </a>
+        
+        <div class="bg-purple-50 p-4 rounded-lg border border-purple-200 flex items-center">
+            <div class="bg-purple-500 text-white p-3 rounded-lg ml-4">
+                <i class="fas fa-mobile-alt"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-purple-800">الأجهزة المسجلة</h3>
+                <p class="text-sm text-gray-600">{{ devices|length }} جهاز مسجل</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Apps Section -->
+<div class="bg-white rounded-xl shadow-md p-6 mb-8">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">التطبيقات</h2>
+        <a href="{{ url_for('upload_app') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm">
+            <i class="fas fa-plus ml-1"></i> إضافة تطبيق
+        </a>
+    </div>
+    
+    {% if apps %}
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="py-3 px-4 text-right">التطبيق</th>
+                    <th class="py-3 px-4 text-right">معرف الحزمة</th>
+                    <th class="py-3 px-4 text-right">الإصدار</th>
+                    <th class="py-3 px-4 text-right">تاريخ الإضافة</th>
+                    <th class="py-3 px-4 text-right">الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                {% for app in apps %}
+                <tr class="hover:bg-gray-50">
+                    <td class="py-3 px-4">
+                        <div class="flex items-center">
+                            {% if app.icon_path %}
+                            <img src="{{ url_for('static', filename=app.icon_path) }}" alt="{{ app.name }}" class="w-10 h-10 rounded-lg ml-3">
+                            {% else %}
+                            <div class="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center ml-3">
+                                <i class="fas fa-mobile-alt text-gray-400"></i>
+                            </div>
+                            {% endif %}
+                            <span class="font-medium">{{ app.name }}</span>
+                        </div>
+                    </td>
+                    <td class="py-3 px-4 text-sm text-gray-600">{{ app.bundle_id }}</td>
+                    <td class="py-3 px-4 text-sm">{{ app.version }}</td>
+                    <td class="py-3 px-4 text-sm text-gray-600">{{ app.created_at }}</td>
+                    <td class="py-3 px-4">
+                        <a href="{{ url_for('manage_app', app_id=app.id) }}" class="text-blue-600 hover:text-blue-800 ml-3">
+                            <i class="fas fa-cog"></i>
+                        </a>
+                        <a href="#" class="text-red-600 hover:text-red-800">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="text-center py-8">
+        <i class="fas fa-box-open text-4xl text-gray-300 mb-3"></i>
+        <p class="text-gray-500">لا توجد تطبيقات مضافة بعد</p>
+        <a href="{{ url_for('upload_app') }}" class="mt-3 inline-block text-blue-600 hover:text-blue-800">
+            <i class="fas fa-plus ml-1"></i> إضافة تطبيق جديد
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Devices Section -->
+<div class="bg-white rounded-xl shadow-md p-6">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">الأجهزة المسجلة</h2>
+    
+    {% if devices %}
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="py-3 px-4 text-right">UDID</th>
+                    <th class="py-3 px-4 text-right">اسم الجهاز</th>
+                    <th class="py-3 px-4 text-right">المستخدم</th>
+                    <th class="py-3 px-4 text-right">تاريخ التسجيل</th>
+                    <th class="py-3 px-4 text-right">الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                {% for device in devices %}
+                <tr class="hover:bg-gray-50">
+                    <td class="py-3 px-4 text-sm font-mono">{{ device.udid[:10] }}...{{ device.udid[-10:] }}</td>
+                    <td class="py-3 px-4">{{ device.name or 'جهاز iOS' }}</td>
+                    <td class="py-3 px-4 text-sm">
+                        {% if device.user_id %}
+                        <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">مرتبط</span>
+                        {% else %}
+                        <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">غير مرتبط</span>
+                        {% endif %}
+                    </td>
+                    <td class="py-3 px-4 text-sm text-gray-600">{{ device.created_at }}</td>
+                    <td class="py-3 px-4">
+                        <button class="text-blue-600 hover:text-blue-800 ml-3">
+                            <i class="fas fa-link"></i>
+                        </button>
+                        <button class="text-red-600 hover:text-red-800">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="text-center py-8">
+        <i class="fas fa-mobile-alt text-4xl text-gray-300 mb-3"></i>
+        <p class="text-gray-500">لا توجد أجهزة مسجلة بعد</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}iOS App Store{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap');
+        body {
+            font-family: 'Tajawal', sans-serif;
+        }
+        .app-card {
+            transition: transform 0.3s ease;
+        }
+        .app-card:hover {
+            transform: scale(1.03);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <nav class="bg-blue-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="{{ url_for('index') }}" class="text-2xl font-bold flex items-center">
+                <i class="fas fa-mobile-alt mr-2"></i>
+                متجر التطبيقات
+            </a>
+            <div class="flex items-center space-x-4">
+                {% if session.get('user_id') %}
+                    {% if session.get('is_admin') %}
+                        <a href="{{ url_for('admin_dashboard') }}" class="px-3 py-2 rounded hover:bg-blue-700">لوحة التحكم</a>
+                    {% endif %}
+                    <a href="{{ url_for('logout') }}" class="px-3 py-2 rounded hover:bg-blue-700">تسجيل الخروج</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="px-3 py-2 rounded hover:bg-blue-700">تسجيل الدخول</a>
+                    <a href="{{ url_for('register') }}" class="px-3 py-2 rounded hover:bg-blue-700">إنشاء حساب</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="mb-4 p-4 rounded 
+                        {% if category == 'error' %}bg-red-100 text-red-700 border border-red-200
+                        {% elif category == 'success' %}bg-green-100 text-green-700 border border-green-200
+                        {% else %}bg-blue-100 text-blue-700 border border-blue-200{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer class="bg-gray-800 text-white py-6 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <p class="text-lg font-bold">متجر التطبيقات</p>
+                    <p class="text-sm text-gray-400">منصة توزيع تطبيقات iOS مع تسجيل UDID</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-github"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+            <div class="mt-4 text-center text-sm text-gray-400">
+                &copy; {{ now.year }} متجر التطبيقات. جميع الحقوق محفوظة.
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
